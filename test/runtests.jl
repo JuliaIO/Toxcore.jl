@@ -48,6 +48,7 @@ function main()
     end
 
     tox_kill(my_tox)
+    println("success")
 end
 
 main()
