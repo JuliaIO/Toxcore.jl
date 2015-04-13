@@ -15,8 +15,9 @@
 const TOX_PUBLIC_KEY_SIZE = 32
 const TOX_SECRET_KEY_SIZE = 32
  
-#define 	TOX_ADDRESS_SIZE   (TOX_PUBLIC_KEY_SIZE + sizeof(uint32_t) + sizeof(uint16_t))
- 
+const TOX_ADDRESS_SIZE    = (TOX_PUBLIC_KEY_SIZE + sizeof(Uint32) + sizeof(Uint16))
+export TOX_ADDRESS_SIZE
+
 const TOX_MAX_NAME_LENGTH = 128
 const TOX_MAX_STATUS_MESSAGE_LENGTH = 1007
 const TOX_MAX_FRIEND_REQUEST_LENGTH = 1016
@@ -41,7 +42,8 @@ typealias TOX_USER_STATUS Cint
 export TOX_USER_STATUS
 typealias TOX_ERR_BOOTSTRAP Cint
 export TOX_ERR_BOOTSTRAP
-
+typealias TOX_ERR_FRIEND_ADD Cint
+export TOX_ERR_FRIEND_ADD
 immutable Tox_Options
     #=
      * The type of socket to create.
