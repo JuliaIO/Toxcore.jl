@@ -1,6 +1,10 @@
 module Toxcore
-
+@windows? begin 
 const libtoxcore = Libdl.dlopen(Pkg.dir("Toxcore", "deps", "libtox"))
+end : @unix? begin
+const libtoxcore = Libdl.dlopen("libtoxcore")
+end : error("operating system not yet supported")
+
 
 include("structs.jl")
 export Tox
