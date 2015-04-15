@@ -21,6 +21,7 @@ include("gen/toxdns.h.functions.jl")
 
 end # module CInterface
 
+include("util.jl")
 include("julia_api.jl")
 
 end # module Toxcore
