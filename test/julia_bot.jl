@@ -6,14 +6,11 @@ const BOOTSTRAP_KEY = "7A2306BFBA665E5480AE59B31E116BE9C04DCEFE04D9FE25082316FA3
 
 function OnFriendRequest(tox::Ptr{Tox}, public_key::Ptr{Uint8}, message::Ptr{Uint8}, length::Csize_t, user_data::Ptr{Void})
     tox_friend_add_norequest(tox, ToxPublicKey(public_key))
-
     println("Accepted a friend request.")
     nothing
 end
 
 function OnFriendMessage(tox::Ptr{Tox}, friend_number::Uint32, typ::TOX_MESSAGE_TYPE, message::Ptr{Uint8}, length::Csize_t, user_data::Ptr{Void})
-	println(pointer_to_array(message, length))    
-
     msg = utf8(pointer_to_array(message, length))
     println(msg)
    	
@@ -46,8 +43,6 @@ function main()
     while true
         tox_iterate(my_tox)
         sleep(tox_iteration_interval(my_tox)/1000)
-
-
     end
 
     tox_kill(my_tox)
