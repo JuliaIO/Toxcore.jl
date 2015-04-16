@@ -11,9 +11,16 @@ export tox_iterate
 export tox_friend_add_norequest
 export tox_friend_send_message
 export tox_friend_add
+export tox_get_savedata
+export tox_options_default
+export tox_self_get_friend_list
+export tox_friend_get_name
+
 
 export ToxPublicKey
 export ToxAddress
+export ToxSavedata
+export Tox_Options
 
 ###################### ToxPublicKey #####################################
 
@@ -65,15 +72,32 @@ function Base.convert(::Type{ToxAddress}, string::ASCIIString)
 	return ToxAddress(pointer(address))
 end
 
+###################### ToxOptions #####################################
+
+
 #############################################################################################
 # First API. Functions have the same name as in Toxcore, but take other arguments			#
 #############################################################################################
+
+#
+# tox_options_default
+#
+function tox_options_default()
+	options = Tox_Options()
+	options = Ref(options)
+	CInterface.tox_options_default(options)
+	options.x
+end
 
 #
 # tox_new
 #
 function tox_new()
 	return CInterface.tox_new(C_NULL, C_NULL, 0, C_NULL)
+end
+
+function tox_new(options::Tox_Options, savedata::Vector{Uint8})
+	return CInterface.tox_new(C_NULL, savedata, length(savedata), C_NULL)
 end
 
 #
@@ -84,23 +108,20 @@ function tox_kill(tox::Ptr{Tox})
 end
 
 #
+# tox_get_savedata
+#
+function tox_get_savedata(tox::Ptr{Tox})
+	savedata = zeros(Uint8, CInterface.tox_get_savedata_size(tox))
+
+	CInterface.tox_get_savedata(tox, savedata)
+	return savedata
+end
+
+#
 # tox_bootstrap
 #
 function tox_bootstrap(tox::Ptr{Tox}, host::ASCIIString, port, public_key::ToxPublicKey)
 	CInterface.tox_bootstrap(tox, host, port, public_key.ptr, C_NULL)
-end
-
-#
-# tox_bootstrap
-#
-# shorten message if it is too long
-#
-function tox_friend_add(tox::Ptr{Tox}, address::ToxAddress, message::UTF8String)
-end
-
-function tox_friend_add(tox::Ptr{Tox}, address::ToxAddress, message::Ptr{Uint8}, length::Integer)
-
-
 end
 
 #
@@ -119,6 +140,47 @@ function tox_self_set_name(tox::Ptr{Tox}, name::ASCIIString)
 	(length(name) > TOX_MAX_NAME_LENGTH) && (name = name[1:TOX_MAX_NAME_LENGTH]) 
 
 	CInterface.tox_self_set_name(tox, name, length(name), C_NULL)
+end
+
+
+#
+# tox_self_get_friend_list
+#
+function tox_self_get_friend_list(tox::Ptr{Tox})
+	friendlist = zeros(Uint32, CInterface.tox_self_get_friend_list_size(tox))
+
+	CInterface.tox_self_get_friend_list(tox, friendlist)
+	friendlist
+end
+
+#
+# tox_friend_add
+#
+
+function tox_friend_add(tox::Ptr{Tox}, address::ToxAddress, message::UTF8String)
+end
+
+function tox_friend_add(tox::Ptr{Tox}, address::ToxAddress, message::Ptr{Uint8}, length::Integer)
+
+
+end
+
+#
+# tox_friend_get_name
+#
+# returns "" if the friend does not exist. utf8 encoding expected
+#
+function tox_friend_get_name(tox::Ptr{Tox}, friend_number::Integer)
+	name_size = CInterface.tox_friend_get_name_size(tox, friend_number, C_NULL)
+
+	if name_size > TOX_MAX_NAME_LENGTH	# this happens if the friend does not exist
+		return ""
+	end
+
+	name = zeros(Uint8, name_size)
+	CInterface.tox_friend_get_name(tox, friend_number, name, C_NULL)
+
+	return utf8(name)
 end
 
 #
@@ -210,7 +272,7 @@ function tox_callback_friend_message(tox::Ptr{Tox}, fun::Function, user_data::Pt
 end
 
 
-###################### High-Level Callback API #####################################
+
 
 
 

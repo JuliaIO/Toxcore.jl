@@ -38,7 +38,7 @@ function tox_get_savedata_size(tox)
     ccall((:tox_get_savedata_size,libtoxcore),Csize_t,(Ptr{Tox},),tox)
 end
 
-function tox_get_savedata(tox,dataconst )
+function tox_get_savedata(tox,data)
     ccall((:tox_get_savedata,libtoxcore),Void,(Ptr{Tox},Ptr{Uint8}),tox,data)
 end
 

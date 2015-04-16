@@ -432,7 +432,10 @@ immutable Tox_Options
     proxy_port::Uint16
     start_port::Uint16
     end_port::Uint16
-    Tox_Options() = new()
+end
+
+function Tox_Options()
+    Tox_Options(false, false, 0, C_NULL, 0, 0, 0)
 end
 
 immutable Array_128_Uint8

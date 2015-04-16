@@ -8,7 +8,7 @@ const base_macos 		= "job/libtoxcore-osx/"
 
 @windows? begin 
 	const liburl = base*base_win(WORD_SIZE)*lastbuild*name_win(WORD_SIZE)
-end : @linuxe? begin
+end : @linux? begin
 	const liburl = base*base_linux(WORD_SIZE)*lastbuild*name_unix
 end : @macos? begin 
 	const liburl = base*base_macos*lastbuild*name_unix
