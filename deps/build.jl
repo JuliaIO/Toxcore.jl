@@ -14,6 +14,8 @@ end : @macos? begin
 	const liburl = base*base_macos*lastbuild*name_unix
 end : error("platform not yet supported. File Pull Request or issue at Toxcore.jl")
 
+
+
 path = download(liburl)
 
 !(isdir("lib") || isfile("lib")) && mkdir("lib")
@@ -21,7 +23,15 @@ path = download(liburl)
 lib_archive = Pkg.dir("Toxcore", "deps", "lib", "lib.zip")
 mv(path, lib_archive)
 
-run(`7z x -obuilds -y $lib_archive`)
+@windows? begin 
+	const unzip = `7z x -obuilds -y $lib_archive`
+end : @unix? begin
+	const unzip = `tar xzf $lib_archive -C builds`
+end : error("platform not yet supported. File Pull Request or issue at Toxcore.jl")
+
+
+run(unzip)
+
 !(isdir("bin") || isfile("bin")) && mkdir("bin")
 ending = @windows? ".dll" : @linux? ".so" : @macos? ".dylib" : error("platform not support") 
 
