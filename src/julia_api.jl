@@ -120,6 +120,15 @@ end
 #
 # tox_bootstrap
 #
+function tox_bootstrap(tox::Ptr{Tox})
+	# this should be done better but for now it works just fine
+	const bootstrap_address = "78.225.128.39"
+	const bootstrap_port = 33445
+	const bootstrap_key = "7A2306BFBA665E5480AE59B31E116BE9C04DCEFE04D9FE25082316FA34B4DA0C"		
+
+	tox_bootstrap(tox, bootstrap_address, bootstrap_port, ToxPublicKey(bootstrap_key))
+end
+
 function tox_bootstrap(tox::Ptr{Tox}, host::ASCIIString, port, public_key::ToxPublicKey)
 	CInterface.tox_bootstrap(tox, host, port, public_key.ptr, C_NULL)
 end

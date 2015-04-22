@@ -1,9 +1,5 @@
 using Toxcore
 
-const BOOTSTRAP_ADDRESS = "78.225.128.39"
-const BOOTSTRAP_PORT = 33445
-const BOOTSTRAP_KEY = "7A2306BFBA665E5480AE59B31E116BE9C04DCEFE04D9FE25082316FA34B4DA0C"
-
 function OnFriendRequest(tox::Ptr{Tox}, public_key::Ptr{Uint8}, message::Ptr{Uint8}, length::Csize_t, user_data::Ptr{Void})
     tox_friend_add_norequest(tox, ToxPublicKey(public_key))
     println("Accepted a friend request.")
@@ -63,7 +59,7 @@ function main()
     tox_self_set_status_message(my_tox, "I am Julia, a high-level, high-performance dynamic programming language for technical computing.") 
 
     # bootstrap from the node defined above 
-    if !tox_bootstrap(my_tox, BOOTSTRAP_ADDRESS, BOOTSTRAP_PORT, ToxPublicKey(BOOTSTRAP_KEY))
+    if !tox_bootstrap(my_tox)
         println("Failed to bootstrap.")
         exit()
     end 
