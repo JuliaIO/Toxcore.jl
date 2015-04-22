@@ -2,5 +2,3 @@
 *.jl.mem
 *.binary
 /deps/bin/*
-/deps/lib/*
-/deps/builds/*

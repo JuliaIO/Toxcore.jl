@@ -24,17 +24,23 @@ end : platform_not_supported()
 path = download(liburl)
 
 !(isdir("lib") || isfile("lib")) && mkdir("lib")
+!(isdir("builds") || isfile("builds")) && mkdir("builds")
 
 lib_archive = Pkg.dir("Toxcore", "deps", "lib", "lib$zip_eding")
 mv(path, lib_archive)
 
-const unzip = @windows? `7z x -obuilds -y $lib_archive` : @unix? `tar xzf $lib_archive -C builds` : platform_not_supported()
+const unzip = @windows? `7z x -obuilds -y $lib_archive` : @unix? `tar xf $lib_archive -C builds` : platform_not_supported()
 
 run(unzip)
 
 !(isdir("bin") || isfile("bin")) && mkdir("bin")
-ending = @windows? ".dll" : @linux? ".so" : @macos? ".dylib" : error("platform not support") 
+ending = @windows? ".dll" : @linux? ".la" : @macos? ".dylib" : error("platform not support") 
 
-mv(Pkg.dir("Toxcore", "deps", "builds","bin","libtox$ending"), joinpath("bin", "libtoxcore$ending"))
-rm("builds", recursive=true)
+# platfrom specific extraction
+@linux? begin
+	mv(Pkg.dir("Toxcore", "deps", "builds","lib","libtoxcore$ending"), joinpath("bin", "libtoxcore$ending"))
+end : platform_not_supported()
+
 rm("lib", recursive=true)
+rm("builds", recursive=true)
+rm("bin", recursive=true)
