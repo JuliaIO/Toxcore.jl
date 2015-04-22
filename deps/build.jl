@@ -1,8 +1,13 @@
+platform_not_supported() = error("platform not yet supported. File Pull Request or issue at Toxcore.jl")
+
+zip_eding = @windows? ".zip" : @unix? ".tar.xz" : platform_not_supported()
+
+
 const base 				= "https://jenkins.libtoxcore.so/"
 const lastbuild 		= "lastSuccessfulBuild/artifact/"
-const name_unix 		= "libtoxcore.tar.xz"
+const name_unix 		= "libtoxcore$zip_eding"
 base_win(wordsize) 		= "view/Libs/job/toxcore_win$(wordsize)_dll/"
-name_win(wordsize) 		= "tox_win$(wordsize)_dll.zip"
+name_win(wordsize) 		= "tox_win$(wordsize)_dll$zip_eding"
 base_linux(wordsize) 	= "job/libtoxcore-linux-$(wordsize == 32 ? "i686" : "x86_64")/"
 const base_macos 		= "job/libtoxcore-osx/"
 
@@ -12,7 +17,7 @@ end : @linux? begin
 	const liburl = base*base_linux(WORD_SIZE)*lastbuild*name_unix
 end : @macos? begin 
 	const liburl = base*base_macos*lastbuild*name_unix
-end : error("platform not yet supported. File Pull Request or issue at Toxcore.jl")
+end : platform_not_supported()
 
 
 
@@ -20,15 +25,10 @@ path = download(liburl)
 
 !(isdir("lib") || isfile("lib")) && mkdir("lib")
 
-lib_archive = Pkg.dir("Toxcore", "deps", "lib", "lib.zip")
+lib_archive = Pkg.dir("Toxcore", "deps", "lib", "lib$zip_eding")
 mv(path, lib_archive)
 
-@windows? begin 
-	const unzip = `7z x -obuilds -y $lib_archive`
-end : @unix? begin
-	const unzip = `tar xzf $lib_archive -C builds`
-end : error("platform not yet supported. File Pull Request or issue at Toxcore.jl")
-
+const unzip = @windows? `7z x -obuilds -y $lib_archive` : @unix? `tar xzf $lib_archive -C builds` : platform_not_supported()
 
 run(unzip)
 
