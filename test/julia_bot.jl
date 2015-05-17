@@ -1,5 +1,18 @@
 using Toxcore
 
+julia_bot_quit = false
+julia_svg_file_bytes = 0
+
+function OnFileChunkRequest(tox::Ptr{Tox}, friend_number::Uint32, file_number::Uint32, position::Uint64, length::Csize_t, user_data::Ptr{Void})
+    global julia_svg_file_bytes
+
+    length = max(length, length(julia_svg_file_bytes)-position)
+
+    tox_file_send_chunk(tox, friend_number, file_number, position, julia_svg_file_bytes[position+1:position+length], length)
+    println("File Chunk Request!")
+    nothing
+end
+
 function OnFriendRequest(tox::Ptr{Tox}, public_key::Ptr{Uint8}, message::Ptr{Uint8}, length::Csize_t, user_data::Ptr{Void})
     tox_friend_add_norequest(tox, ToxPublicKey(public_key))
     println("Accepted a friend request.")
@@ -8,14 +21,26 @@ end
 
 function OnFriendMessage(tox::Ptr{Tox}, friend_number::Uint32, typ::TOX_MESSAGE_TYPE, message::Ptr{Uint8}, length::Csize_t, user_data::Ptr{Void})
     global julia_bot_quit
+    global julia_svg_file_bytes
 
     msg = utf8(pointer_to_array(message, length))
     println(msg)
    	
-   
-    if (msg == "/q")
+    if (msg == "/h")
+        tox_friend_send_message(tox, friend_number, utf8("Hi, I'm julia!"))
+        tox_friend_send_message(tox, friend_number, utf8("I know these commands:"))
+        tox_friend_send_message(tox, friend_number, utf8(" '/h' - some help"))
+        tox_friend_send_message(tox, friend_number, utf8(" '/f' - I send you a file"))
+        tox_friend_send_message(tox, friend_number, utf8(" '/q' - I quit"))
+    elseif (msg == "/q")
         tox_friend_send_message(tox, friend_number, utf8("Ok, I’ll quit!"))
         julia_bot_quit = true
+    elseif msg == "/f"
+        #tox_friend_send_message(tox, friend_number, utf8("Ok dude, I'll send you a nice file!"))
+        
+        #if tox_file_send(tox, friend_number, TOX_FILE_KIND_DATA, length(julia_svg_file_bytes), utf8("julia.svg")) == typemax(Uint32)
+        #    println("Attempt to send file failed.")
+        #end
     else 
         tox_friend_send_message(tox, friend_number, utf8("Thanks for your message, dude!"))
     end
@@ -23,10 +48,13 @@ function OnFriendMessage(tox::Ptr{Tox}, friend_number::Uint32, typ::TOX_MESSAGE_
     nothing
 end
 
-julia_bot_quit = false
-
 function main()
     info("This is the Julia Tox bot")
+
+    # Load the file that the bot always sends
+    julia_svg_file = open(Pkg.dir("Toxcore", "test/julia.svg"), "r") 
+    julia_svg_file_bytes = readbytes(julia_svg_file)
+    close(julia_svg_file)
 
     # Try to load the tox settings
     my_tox = 0
@@ -47,6 +75,7 @@ function main()
     end
 
     # register the callbacks 
+    tox_callback_file_chunk_request(my_tox, OnFileChunkRequest, C_NULL)
     tox_callback_friend_request(my_tox, OnFriendRequest, C_NULL)
     tox_callback_friend_message(my_tox, OnFriendMessage, C_NULL)
 

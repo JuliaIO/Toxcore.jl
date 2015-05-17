@@ -1,8 +1,6 @@
 export tox_new
 export tox_kill
 export tox_bootstrap
-export tox_callback_friend_request
-export tox_callback_friend_message
 export tox_self_get_address
 export tox_self_set_name
 export tox_self_set_status_message
@@ -15,6 +13,17 @@ export tox_get_savedata
 export tox_options_default
 export tox_self_get_friend_list
 export tox_friend_get_name
+
+export tox_file_send
+export tox_file_send_chunk
+
+export tox_callback_file_chunk_request
+export tox_callback_file_recv
+export tox_callback_file_recv_chunk
+export tox_callback_file_recv_control
+
+export tox_callback_friend_request
+export tox_callback_friend_message
 
 
 export ToxPublicKey
@@ -244,11 +253,101 @@ function tox_iteration_interval(tox::Ptr{Tox})
 	CInterface.tox_iteration_interval(tox)
 end
 
+
+
+
+#bool 	tox_file_control (Tox *tox, uint32_t friend_number, uint32_t file_number, TOX_FILE_CONTROL control, TOX_ERR_FILE_CONTROL *error)
+ 
+#void 	tox_callback_file_recv_control (Tox *tox, tox_file_recv_control_cb *function, void *user_data)
+ 
+#bool 	tox_file_seek (Tox *tox, uint32_t friend_number, uint32_t file_number, uint64_t position, TOX_ERR_FILE_SEEK *error)
+ 
+#bool 	tox_file_get_file_id (const Tox *tox, uint32_t friend_number, uint32_t file_number, uint8_t *file_id, TOX_ERR_FILE_GET *error)
+ 
+
+#
+# tox_file_send
+#
+
+function tox_file_send(tox::Ptr{Tox}, friend_number::Uint32, kind::TOX_FILE_KIND, file_size::Integer, filename::UTF8String)
+	(length(filename.data) > TOX_MAX_FILENAME_LENGTH) && throw(error("Tox API Filename to long!"))
+
+	return CInterface.tox_file_send(tox, friend_number, kind, file_size, C_NULL, pointer(filename.data), length(filename.data), C_NULL)
+end
+
+#
+# tox_file_send
+#
+function tox_file_send_chunk(tox::Ptr{Tox}, friend_number::Uint32, file_number::Uint32, position::Uint64, data::Ptr{Uint8}, length::Csize_t)
+
+	return CInterface.tox_file_send_chunk(tox, friend_number, file_number, position, data, length, C_NULL)
+end
+
+
+ 
+
+
+
+
 ###################### Low-Level Callback API #####################################
 
-typealias tox_friend_connection_status_cb_args (Ptr{Tox}, Uint32, TOX_CONNECTION, Ptr{Void})
-typealias tox_friend_request_cb_args (Ptr{Tox}, Ptr{Uint8}, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_message_cb_args (Ptr{Tox}, Uint32, TOX_MESSAGE_TYPE, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_file_chunk_request_cb_args 		(Ptr{Tox}, Uint32, Uint32, Uint64, Csize_t, Ptr{Void})
+typealias tox_file_recv_cb_args 				(Ptr{Tox}, Uint32, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_file_recv_chunk_cb_args 			(Ptr{Tox}, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_file_recv_control_cb_args 		(Ptr{Tox}, Uint32, Uint32, TOX_FILE_CONTROL, Ptr{Void})
+
+typealias tox_friend_connection_status_cb_args 	(Ptr{Tox}, Uint32, TOX_CONNECTION, Ptr{Void})
+typealias tox_friend_lossless_packet_cb_args 	(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_lossy_packet_cb_args		(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_message_cb_args 			(Ptr{Tox}, Uint32, TOX_MESSAGE_TYPE, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_name_cb_args 				(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_read_receipt_cb_args 		(Ptr{Tox}, Uint32, Uint32, Ptr{Void})
+typealias tox_friend_request_cb_args 			(Ptr{Tox}, Ptr{Uint8}, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_status_cb_args				(Ptr{Tox}, Uint32, TOX_USER_STATUS, Ptr{Void})
+typealias tox_friend_status_message_cb_args 	(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_friend_typing_cb_args 			(Ptr{Tox}, Uint32, Bool, Ptr{Void})
+
+typealias tox_self_connection_status_cb_args 	(Ptr{Tox}, TOX_CONNECTION, Ptr{Void})
+
+#
+# tox_callback_file_chunk_request
+#
+function tox_callback_file_chunk_request(tox::Ptr{Tox}, fun::Function, user_data::Ptr{Void})
+	!method_exists(fun, tox_file_chunk_request_cb_args) && throw(error("Tox API Callback Error"))
+
+	CInterface.tox_callback_file_chunk_request(tox, cfunction(fun, Void, tox_file_chunk_request_cb_args), user_data)
+	nothing
+end
+
+#
+# tox_callback_file_recv
+#
+function tox_callback_file_recv(tox::Ptr{Tox}, fun::Function, user_data::Ptr{Void})
+	!method_exists(fun, tox_file_recv_cb_args) && throw(error("Tox API Callback Error"))
+
+	CInterface.tox_callback_file_recv(tox, cfunction(fun, Void, tox_file_recv_cb_args), user_data)
+	nothing
+end
+
+#
+# tox_callback_file_recv_chunk
+#
+function tox_callback_file_recv_chunk(tox::Ptr{Tox}, fun::Function, user_data::Ptr{Void})
+	!method_exists(fun, tox_file_recv_chunk_cb_args) && throw(error("Tox API Callback Error"))
+
+	CInterface.tox_callback_file_recv_chunk(tox, cfunction(fun, Void, tox_file_recv_chunk_cb_args), user_data)
+	nothing
+end
+
+#
+# tox_callback_file_recv_control
+#
+function tox_callback_file_recv_control(tox::Ptr{Tox}, fun::Function, user_data::Ptr{Void})
+	!method_exists(fun, tox_file_recv_control_cb_args) && throw(error("Tox API Callback Error"))
+
+	CInterface.tox_callback_file_recv_control(tox, cfunction(fun, Void, tox_file_recv_control_cb_args), user_data)
+	nothing
+end
 
 #
 # tox_callback_friend_connection_status
@@ -281,6 +380,12 @@ function tox_callback_friend_message(tox::Ptr{Tox}, fun::Function, user_data::Pt
 end
 
 
+
+#void 	tox_callback_file_chunk_request (Tox *tox, tox_file_chunk_request_cb *function, void *user_data)
+ 
+#void 	tox_callback_file_recv (Tox *tox, tox_file_recv_cb *function, void *user_data)
+ 
+#void 	tox_callback_file_recv_chunk (Tox *tox, tox_file_recv_chunk_cb *function, void *user_data)#
 
 
 
