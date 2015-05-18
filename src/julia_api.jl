@@ -83,6 +83,14 @@ end
 
 ###################### ToxOptions #####################################
 
+###################### Error callback #################################
+ 
+function tox_error_callback(tox::Ptr{Tox}, tox_function::ASCIIString, code::Uint32)
+	println("Error: " + tox_function + "exited with code " + code)
+end
+
+
+
 
 #############################################################################################
 # First API. Functions have the same name as in Toxcore, but take other arguments			#
@@ -278,21 +286,17 @@ end
 #
 # tox_file_send
 #
-function tox_file_send_chunk(tox::Ptr{Tox}, friend_number::Uint32, file_number::Uint32, position::Uint64, data::Ptr{Uint8}, length::Csize_t)
+function tox_file_send_chunk(tox::Ptr{Tox}, friend_number::Uint32, file_number::Uint32, position::Integer, data::Vector{Uint8})
 
-	return CInterface.tox_file_send_chunk(tox, friend_number, file_number, position, data, length, C_NULL)
+	return CInterface.tox_file_send_chunk(tox, friend_number, file_number, position, data, length(data), C_NULL)
 end
-
-
- 
-
 
 
 
 ###################### Low-Level Callback API #####################################
 
 typealias tox_file_chunk_request_cb_args 		(Ptr{Tox}, Uint32, Uint32, Uint64, Csize_t, Ptr{Void})
-typealias tox_file_recv_cb_args 				(Ptr{Tox}, Uint32, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
+typealias tox_file_recv_cb_args 				(Ptr{Tox}, Uint32, Uint32, TOX_FILE_KIND, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
 typealias tox_file_recv_chunk_cb_args 			(Ptr{Tox}, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
 typealias tox_file_recv_control_cb_args 		(Ptr{Tox}, Uint32, Uint32, TOX_FILE_CONTROL, Ptr{Void})
 
