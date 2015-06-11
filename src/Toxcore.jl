@@ -9,7 +9,7 @@ module CInterface
 	importall Toxcore
 	import Toxcore.Array_128_Uint8
 
-	const libtoxcore = "libtoxcore"
+	const libtoxcore = Pkg.dir("Toxcore", "deps", "bin", "libtoxcore")
 
 	include("gen/tox.h.functions.jl")
 	include("gen/toxav.h.functions.jl")

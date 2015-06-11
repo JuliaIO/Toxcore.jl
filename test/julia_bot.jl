@@ -98,7 +98,7 @@ function main()
     my_tox = 0
 
     try 
-        savefile = open(Pkg.dir("Toxcore", "test/bot_savedata.binary"), "r")
+        savefile = open(Pkg.dir("Toxcore", "test", "bot_savedata.binary"), "r")
         savedata = readbytes(savefile)
         close(savefile)
 
@@ -106,6 +106,7 @@ function main()
 
         info("Previous bot instance found. Reusing it!")
     catch e 
+        println(e)
         #Create a default Tox
         my_tox = tox_new()
 
@@ -154,7 +155,7 @@ function main()
     savedata = tox_get_savedata(my_tox)
     tox_kill(my_tox)
 
-    savefile = open(Pkg.dir("Toxcore", "test/bot_savedata.binary"), "w")
+    savefile = open(Pkg.dir("Toxcore", "test", "bot_savedata.binary"), "w")
     write(savefile, savedata)
     close(savefile)
 

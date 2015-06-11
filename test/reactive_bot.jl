@@ -24,8 +24,6 @@ ToxData() = ToxData(Uint8[], Input(FriendRequest[]), Dict{FriendID, Signal{UTF8S
 
 const CLIENT_DICT = Dict{Ptr{Tox}, ToxData}()
 
-Base.utf8(ptr::Ptr{Uint8}, bufflength::Integer) = utf8(pointer_to_array(ptr, bufflength))
-
 
 
 function init()
