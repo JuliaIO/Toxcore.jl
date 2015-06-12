@@ -1,3 +1,8 @@
+################################################################################
+# Functions as exported by Clang but removed parameter types.                  #
+# This regular expression should help                                          #
+# ([A-z_0-9]*)(\{([A-z,_,0-9])*\})*                                          #
+################################################################################
 function tox_dns3_new(server_public_key)
     ccall((:tox_dns3_new,libtoxcore),Ptr{Void},(Ptr{Uint8},),server_public_key)
 end

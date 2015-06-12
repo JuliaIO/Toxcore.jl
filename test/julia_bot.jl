@@ -102,7 +102,21 @@ function main()
         savedata = readbytes(savefile)
         close(savefile)
 
-        my_tox = tox_new(tox_options_default(), savedata)
+        default_options = tox_options_default()
+
+        options = Tox_Options(default_options.ipv6_enabled,
+                            default_options.udp_enabled,
+                            default_options.proxy_type,
+                            default_options.proxy_host,
+                            default_options.proxy_port,
+                            default_options.start_port,
+                            default_options.end_port,
+                            default_options.tcp_port,
+                            TOX_SAVEDATA_TYPE_TOX_SAVE,
+                            pointer(savedata),
+                            length(savedata) )
+
+        my_tox = tox_new(options)
 
         info("Previous bot instance found. Reusing it!")
     catch e 

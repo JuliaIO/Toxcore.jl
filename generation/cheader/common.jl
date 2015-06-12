@@ -1,196 +1,6 @@
+# Automatically generated using Clang.jl wrap_c, version 0.0.0
+
 using Compat
-
-################################################################################
-# Export definitions supported by our export script                            #
-################################################################################
-export Tox, Tox_Options
-
-# typealias
-export TOX_CHAT_CHANGE
-export TOX_USER_STATUS
-export TOX_MESSAGE_TYPE
-export TOX_PROXY_TYPE
-export TOX_SAVEDATA_TYPE
-export TOX_ERR_OPTIONS_NEW
-export TOX_ERR_NEW
-export TOX_ERR_BOOTSTRAP
-export TOX_CONNECTION
-export TOX_ERR_SET_INFO
-export TOX_ERR_FRIEND_ADD
-export TOX_ERR_FRIEND_DELETE
-export TOX_ERR_FRIEND_BY_PUBLIC_KEY
-export TOX_ERR_FRIEND_GET_PUBLIC_KEY
-export TOX_ERR_FRIEND_GET_LAST_ONLINE
-export TOX_ERR_FRIEND_QUERY
-export TOX_ERR_SET_TYPING
-export TOX_ERR_FRIEND_SEND_MESSAGE
-export TOX_FILE_KIND
-export TOX_FILE_CONTROL
-export TOX_ERR_FILE_CONTROL
-export TOX_ERR_FILE_SEEK
-export TOX_ERR_FILE_GET
-export TOX_ERR_FILE_SEND
-export TOX_ERR_FILE_SEND_CHUNK
-export TOX_ERR_FRIEND_CUSTOM_PACKET
-export TOX_ERR_GET_PORT
-
-export tox_self_connection_status_cb
-export tox_friend_name_cb
-export tox_friend_status_message_cb
-export tox_friend_status_cb
-export tox_friend_connection_status_cb
-export tox_friend_typing_cb
-export tox_friend_read_receipt_cb
-export tox_friend_request_cb
-export tox_friend_message_cb
-export tox_file_recv_control_cb
-export tox_file_chunk_request_cb
-export tox_file_recv_cb
-export tox_file_recv_chunk_cb
-export tox_friend_lossy_packet_cb
-export tox_friend_lossless_packet_cb
-
-# consts
-export TOX_CHAT_CHANGE_PEER_ADD
-export TOX_CHAT_CHANGE_PEER_DEL
-export TOX_CHAT_CHANGE_PEER_NAME
-export TOX_VERSION_MAJOR
-export TOX_VERSION_MINOR
-export TOX_VERSION_PATCH
-export TOX_PUBLIC_KEY_SIZE
-export TOX_SECRET_KEY_SIZE
-export TOX_MAX_NAME_LENGTH
-export TOX_MAX_STATUS_MESSAGE_LENGTH
-export TOX_MAX_FRIEND_REQUEST_LENGTH
-export TOX_MAX_MESSAGE_LENGTH
-export TOX_MAX_CUSTOM_PACKET_SIZE
-export TOX_HASH_LENGTH
-export TOX_FILE_ID_LENGTH
-export TOX_MAX_FILENAME_LENGTH
-export TOX_USER_STATUS_NONE
-export TOX_USER_STATUS_AWAY
-export TOX_USER_STATUS_BUSY
-export TOX_MESSAGE_TYPE_NORMAL
-export TOX_MESSAGE_TYPE_ACTION
-export TOX_PROXY_TYPE_NONE
-export TOX_PROXY_TYPE_HTTP
-export TOX_PROXY_TYPE_SOCKS
-export TOX_SAVEDATA_TYPE_NONE
-export TOX_SAVEDATA_TYPE_TOX_SAVE
-export TOX_SAVEDATA_TYPE_SECRET_KEY
-export TOX_ERR_OPTIONS_NEW_OK
-export TOX_ERR_OPTIONS_NEW_MALLOC
-export TOX_ERR_NEW_OK
-export TOX_ERR_NEW_NULL
-export TOX_ERR_NEW_MALLOC
-export TOX_ERR_NEW_PORT_ALLOC
-export TOX_ERR_NEW_PROXY_BAD_TYPE
-export TOX_ERR_NEW_PROXY_BAD_HOST
-export TOX_ERR_NEW_PROXY_BAD_PORT
-export TOX_ERR_NEW_PROXY_NOT_FOUND
-export TOX_ERR_NEW_LOAD_ENCRYPTED
-export TOX_ERR_NEW_LOAD_BAD_FORMAT
-export TOX_ERR_BOOTSTRAP_OK
-export TOX_ERR_BOOTSTRAP_NULL
-export TOX_ERR_BOOTSTRAP_BAD_HOST
-export TOX_ERR_BOOTSTRAP_BAD_PORT
-export TOX_CONNECTION_NONE
-export TOX_CONNECTION_TCP
-export TOX_CONNECTION_UDP
-export TOX_ERR_SET_INFO_OK
-export TOX_ERR_SET_INFO_NULL
-export TOX_ERR_SET_INFO_TOO_LONG
-export TOX_ERR_FRIEND_ADD_OK
-export TOX_ERR_FRIEND_ADD_NULL
-export TOX_ERR_FRIEND_ADD_TOO_LONG
-export TOX_ERR_FRIEND_ADD_NO_MESSAGE
-export TOX_ERR_FRIEND_ADD_OWN_KEY
-export TOX_ERR_FRIEND_ADD_ALREADY_SENT
-export TOX_ERR_FRIEND_ADD_BAD_CHECKSUM
-export TOX_ERR_FRIEND_ADD_SET_NEW_NOSPAM
-export TOX_ERR_FRIEND_ADD_MALLOC
-export TOX_ERR_FRIEND_DELETE_OK
-export TOX_ERR_FRIEND_DELETE_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_BY_PUBLIC_KEY_OK
-export TOX_ERR_FRIEND_BY_PUBLIC_KEY_NULL
-export TOX_ERR_FRIEND_BY_PUBLIC_KEY_NOT_FOUND
-export TOX_ERR_FRIEND_GET_PUBLIC_KEY_OK
-export TOX_ERR_FRIEND_GET_PUBLIC_KEY_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_GET_LAST_ONLINE_OK
-export TOX_ERR_FRIEND_GET_LAST_ONLINE_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_QUERY_OK
-export TOX_ERR_FRIEND_QUERY_NULL
-export TOX_ERR_FRIEND_QUERY_FRIEND_NOT_FOUND
-export TOX_ERR_SET_TYPING_OK
-export TOX_ERR_SET_TYPING_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_SEND_MESSAGE_OK
-export TOX_ERR_FRIEND_SEND_MESSAGE_NULL
-export TOX_ERR_FRIEND_SEND_MESSAGE_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_SEND_MESSAGE_FRIEND_NOT_CONNECTED
-export TOX_ERR_FRIEND_SEND_MESSAGE_SENDQ
-export TOX_ERR_FRIEND_SEND_MESSAGE_TOO_LONG
-export TOX_ERR_FRIEND_SEND_MESSAGE_EMPTY
-export TOX_FILE_KIND_DATA
-export TOX_FILE_KIND_AVATAR
-export TOX_FILE_CONTROL_RESUME
-export TOX_FILE_CONTROL_PAUSE
-export TOX_FILE_CONTROL_CANCEL
-export TOX_ERR_FILE_CONTROL_OK
-export TOX_ERR_FILE_CONTROL_FRIEND_NOT_FOUND
-export TOX_ERR_FILE_CONTROL_FRIEND_NOT_CONNECTED
-export TOX_ERR_FILE_CONTROL_NOT_FOUND
-export TOX_ERR_FILE_CONTROL_NOT_PAUSED
-export TOX_ERR_FILE_CONTROL_DENIED
-export TOX_ERR_FILE_CONTROL_ALREADY_PAUSED
-export TOX_ERR_FILE_CONTROL_SENDQ
-export TOX_ERR_FILE_SEEK_OK
-export TOX_ERR_FILE_SEEK_FRIEND_NOT_FOUND
-export TOX_ERR_FILE_SEEK_FRIEND_NOT_CONNECTED
-export TOX_ERR_FILE_SEEK_NOT_FOUND
-export TOX_ERR_FILE_SEEK_DENIED
-export TOX_ERR_FILE_SEEK_INVALID_POSITION
-export TOX_ERR_FILE_SEEK_SENDQ
-export TOX_ERR_FILE_GET_OK
-export TOX_ERR_FILE_GET_NULL
-export TOX_ERR_FILE_GET_FRIEND_NOT_FOUND
-export TOX_ERR_FILE_GET_NOT_FOUND
-export TOX_ERR_FILE_SEND_OK
-export TOX_ERR_FILE_SEND_NULL
-export TOX_ERR_FILE_SEND_FRIEND_NOT_FOUND
-export TOX_ERR_FILE_SEND_FRIEND_NOT_CONNECTED
-export TOX_ERR_FILE_SEND_NAME_TOO_LONG
-export TOX_ERR_FILE_SEND_TOO_MANY
-export TOX_ERR_FILE_SEND_CHUNK_OK
-export TOX_ERR_FILE_SEND_CHUNK_NULL
-export TOX_ERR_FILE_SEND_CHUNK_FRIEND_NOT_FOUND
-export TOX_ERR_FILE_SEND_CHUNK_FRIEND_NOT_CONNECTED
-export TOX_ERR_FILE_SEND_CHUNK_NOT_FOUND
-export TOX_ERR_FILE_SEND_CHUNK_NOT_TRANSFERRING
-export TOX_ERR_FILE_SEND_CHUNK_INVALID_LENGTH
-export TOX_ERR_FILE_SEND_CHUNK_SENDQ
-export TOX_ERR_FILE_SEND_CHUNK_WRONG_POSITION
-export TOX_ERR_FRIEND_CUSTOM_PACKET_OK
-export TOX_ERR_FRIEND_CUSTOM_PACKET_NULL
-export TOX_ERR_FRIEND_CUSTOM_PACKET_FRIEND_NOT_FOUND
-export TOX_ERR_FRIEND_CUSTOM_PACKET_FRIEND_NOT_CONNECTED
-export TOX_ERR_FRIEND_CUSTOM_PACKET_INVALID
-export TOX_ERR_FRIEND_CUSTOM_PACKET_EMPTY
-export TOX_ERR_FRIEND_CUSTOM_PACKET_TOO_LONG
-export TOX_ERR_FRIEND_CUSTOM_PACKET_SENDQ
-export TOX_ERR_GET_PORT_OK
-export TOX_ERR_GET_PORT_NOT_BOUND
-export TOX_ADDRESS_SIZE
-
-################################################################################
-# This is the code generated by Clang (Anonymous enums removed)                #
-################################################################################
-
-# begin enum TOX_CHAT_CHANGE
-typealias TOX_CHAT_CHANGE Uint32
-const TOX_CHAT_CHANGE_PEER_ADD = (UInt32)(0)
-const TOX_CHAT_CHANGE_PEER_DEL = (UInt32)(1)
-const TOX_CHAT_CHANGE_PEER_NAME = (UInt32)(2)
-# end enum TOX_CHAT_CHANGE
 
 const TOX_VERSION_MAJOR = 0
 const TOX_VERSION_MINOR = 0
@@ -213,6 +23,8 @@ const TOX_MAX_CUSTOM_PACKET_SIZE = 1373
 const TOX_HASH_LENGTH = 32
 const TOX_FILE_ID_LENGTH = 32
 const TOX_MAX_FILENAME_LENGTH = 255
+
+typealias Tox Void
 
 # begin enum TOX_USER_STATUS
 typealias TOX_USER_STATUS Uint32
@@ -430,6 +242,26 @@ const TOX_ERR_GET_PORT_OK = (UInt32)(0)
 const TOX_ERR_GET_PORT_NOT_BOUND = (UInt32)(1)
 # end enum TOX_ERR_GET_PORT
 
+# begin enum ANONYMOUS_1
+typealias ANONYMOUS_1 Uint32
+const TOX_GROUPCHAT_TYPE_TEXT = (UInt32)(0)
+const TOX_GROUPCHAT_TYPE_AV = (UInt32)(1)
+# end enum ANONYMOUS_1
+
+# begin enum ANONYMOUS_2
+typealias ANONYMOUS_2 Uint32
+const TOX_CHAT_CHANGE_PEER_ADD = (UInt32)(0)
+const TOX_CHAT_CHANGE_PEER_DEL = (UInt32)(1)
+const TOX_CHAT_CHANGE_PEER_NAME = (UInt32)(2)
+# end enum ANONYMOUS_2
+
+# begin enum TOX_CHAT_CHANGE
+typealias TOX_CHAT_CHANGE Uint32
+const TOX_CHAT_CHANGE_PEER_ADD = (UInt32)(0)
+const TOX_CHAT_CHANGE_PEER_DEL = (UInt32)(1)
+const TOX_CHAT_CHANGE_PEER_NAME = (UInt32)(2)
+# end enum TOX_CHAT_CHANGE
+
 immutable Array_128_Uint8
     d1::Uint8
     d2::Uint8
@@ -565,44 +397,129 @@ zero(::Type{Array_128_Uint8}) = begin  # /home/sbordt/.julia/v0.4/Clang/src/wrap
         Array_128_Uint8(fill(zero(Uint8),128)...)
     end
 
-################################################################################
-# Added by hand                                                                #
-################################################################################
-immutable Tox end
+const RTP_PAYLOAD_SIZE = 65535
 
-const TOX_ADDRESS_SIZE = TOX_PUBLIC_KEY_SIZE + sizeof(Uint32) + sizeof(Uint16)
+typealias ToxAv Void
+typealias ToxAVCallback Ptr{Void}
+typealias ToxAvAudioCallback Ptr{Void}
+typealias ToxAvVideoCallback Ptr{Void}
 
-typealias tox_self_connection_status_cb Void
-typealias tox_friend_name_cb Void
-typealias tox_friend_status_message_cb Void
-typealias tox_friend_status_cb Void
-typealias tox_friend_connection_status_cb Void
-typealias tox_friend_typing_cb Void
-typealias tox_friend_read_receipt_cb Void
-typealias tox_friend_request_cb Void
-typealias tox_friend_message_cb Void
-typealias tox_file_recv_control_cb Void
-typealias tox_file_chunk_request_cb Void
-typealias tox_file_recv_cb Void
-typealias tox_file_recv_chunk_cb Void
-typealias tox_friend_lossy_packet_cb Void
-typealias tox_friend_lossless_packet_cb Void
+# begin enum ANONYMOUS_3
+typealias ANONYMOUS_3 Uint32
+const av_OnInvite = (UInt32)(0)
+const av_OnRinging = (UInt32)(1)
+const av_OnStart = (UInt32)(2)
+const av_OnCancel = (UInt32)(3)
+const av_OnReject = (UInt32)(4)
+const av_OnEnd = (UInt32)(5)
+const av_OnRequestTimeout = (UInt32)(6)
+const av_OnPeerTimeout = (UInt32)(7)
+const av_OnPeerCSChange = (UInt32)(8)
+const av_OnSelfCSChange = (UInt32)(9)
+# end enum ANONYMOUS_3
 
-immutable Tox_Options
-    ipv6_enabled::Bool
-    udp_enabled::Bool
-    proxy_type::TOX_PROXY_TYPE
-    proxy_host::Ptr{Cchar}
-    proxy_port::Uint16
-    start_port::Uint16
-    end_port::Uint16
-    tcp_port::Uint16
-    savedata_type::TOX_SAVEDATA_TYPE
-    savedata_data::Ptr{Uint8}
-    savedata_length::Csize_t
-end
+# begin enum ToxAvCallbackID
+typealias ToxAvCallbackID Uint32
+const av_OnInvite = (UInt32)(0)
+const av_OnRinging = (UInt32)(1)
+const av_OnStart = (UInt32)(2)
+const av_OnCancel = (UInt32)(3)
+const av_OnReject = (UInt32)(4)
+const av_OnEnd = (UInt32)(5)
+const av_OnRequestTimeout = (UInt32)(6)
+const av_OnPeerTimeout = (UInt32)(7)
+const av_OnPeerCSChange = (UInt32)(8)
+const av_OnSelfCSChange = (UInt32)(9)
+# end enum ToxAvCallbackID
 
-function Tox_Options()
-    # some default values that might make sense
-    Tox_Options(false, false, 0, C_NULL, 0, 0, 0, 0, TOX_SAVEDATA_TYPE_NONE, C_NULL, 0 )
-end
+# begin enum ANONYMOUS_4
+typealias ANONYMOUS_4 Uint32
+const av_TypeAudio = (UInt32)(192)
+const av_TypeVideo = (UInt32)(193)
+# end enum ANONYMOUS_4
+
+# begin enum ToxAvCallType
+typealias ToxAvCallType Uint32
+const av_TypeAudio = (UInt32)(192)
+const av_TypeVideo = (UInt32)(193)
+# end enum ToxAvCallType
+
+# begin enum ANONYMOUS_5
+typealias ANONYMOUS_5 Cint
+const av_CallNonExistent = (Int32)(-1)
+const av_CallInviting = (Int32)(0)
+const av_CallStarting = (Int32)(1)
+const av_CallActive = (Int32)(2)
+const av_CallHold = (Int32)(3)
+const av_CallHungUp = (Int32)(4)
+# end enum ANONYMOUS_5
+
+# begin enum ToxAvCallState
+typealias ToxAvCallState Cint
+const av_CallNonExistent = (Int32)(-1)
+const av_CallInviting = (Int32)(0)
+const av_CallStarting = (Int32)(1)
+const av_CallActive = (Int32)(2)
+const av_CallHold = (Int32)(3)
+const av_CallHungUp = (Int32)(4)
+# end enum ToxAvCallState
+
+# begin enum ANONYMOUS_6
+typealias ANONYMOUS_6 Cint
+const av_ErrorNone = (Int32)(0)
+const av_ErrorUnknown = (Int32)(-1)
+const av_ErrorNoCall = (Int32)(-20)
+const av_ErrorInvalidState = (Int32)(-21)
+const av_ErrorAlreadyInCallWithPeer = (Int32)(-22)
+const av_ErrorReachedCallLimit = (Int32)(-23)
+const av_ErrorInitializingCodecs = (Int32)(-30)
+const av_ErrorSettingVideoResolution = (Int32)(-31)
+const av_ErrorSettingVideoBitrate = (Int32)(-32)
+const av_ErrorSplittingVideoPayload = (Int32)(-33)
+const av_ErrorEncodingVideo = (Int32)(-34)
+const av_ErrorEncodingAudio = (Int32)(-35)
+const av_ErrorSendingPayload = (Int32)(-40)
+const av_ErrorCreatingRtpSessions = (Int32)(-41)
+const av_ErrorNoRtpSession = (Int32)(-50)
+const av_ErrorInvalidCodecState = (Int32)(-51)
+const av_ErrorPacketTooLarge = (Int32)(-52)
+# end enum ANONYMOUS_6
+
+# begin enum ToxAvError
+typealias ToxAvError Cint
+const av_ErrorNone = (Int32)(0)
+const av_ErrorUnknown = (Int32)(-1)
+const av_ErrorNoCall = (Int32)(-20)
+const av_ErrorInvalidState = (Int32)(-21)
+const av_ErrorAlreadyInCallWithPeer = (Int32)(-22)
+const av_ErrorReachedCallLimit = (Int32)(-23)
+const av_ErrorInitializingCodecs = (Int32)(-30)
+const av_ErrorSettingVideoResolution = (Int32)(-31)
+const av_ErrorSettingVideoBitrate = (Int32)(-32)
+const av_ErrorSplittingVideoPayload = (Int32)(-33)
+const av_ErrorEncodingVideo = (Int32)(-34)
+const av_ErrorEncodingAudio = (Int32)(-35)
+const av_ErrorSendingPayload = (Int32)(-40)
+const av_ErrorCreatingRtpSessions = (Int32)(-41)
+const av_ErrorNoRtpSession = (Int32)(-50)
+const av_ErrorInvalidCodecState = (Int32)(-51)
+const av_ErrorPacketTooLarge = (Int32)(-52)
+# end enum ToxAvError
+
+# begin enum ANONYMOUS_7
+typealias ANONYMOUS_7 Uint32
+const av_AudioEncoding = (UInt32)(1)
+const av_AudioDecoding = (UInt32)(2)
+const av_VideoEncoding = (UInt32)(4)
+const av_VideoDecoding = (UInt32)(8)
+# end enum ANONYMOUS_7
+
+# begin enum ToxAvCapabilities
+typealias ToxAvCapabilities Uint32
+const av_AudioEncoding = (UInt32)(1)
+const av_AudioDecoding = (UInt32)(2)
+const av_VideoEncoding = (UInt32)(4)
+const av_VideoDecoding = (UInt32)(8)
+# end enum ToxAvCapabilities
+
+const TOXDNS_MAX_RECOMMENDED_NAME_LENGTH = 32

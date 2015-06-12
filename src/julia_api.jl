@@ -110,11 +110,11 @@ end
 # tox_new
 #
 function tox_new()
-	return CInterface.tox_new(C_NULL, C_NULL, 0, C_NULL)
+	return CInterface.tox_new(C_NULL, C_NULL)
 end
 
-function tox_new(options::Tox_Options, savedata::Vector{Uint8})
-	return CInterface.tox_new(C_NULL, savedata, length(savedata), C_NULL)
+function tox_new(options::Tox_Options)
+	return CInterface.tox_new(Ref(options), C_NULL)
 end
 
 #

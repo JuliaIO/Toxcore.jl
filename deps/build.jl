@@ -35,10 +35,11 @@ const unzip = @windows? `7z x -obuilds -y $lib_archive` : @unix? `tar xf $lib_ar
 run(unzip)
 
 !(isdir("bin") || isfile("bin")) && mkdir("bin")
-const ending = @windows? ".dll" : @linux? ".la" : @macos? ".dylib" : error("platform not support")
+const file = @windows? "libtox" : @linux? "libtoxcore" : @macos? "NO_IDEA" : error("platform not support")
+const ending = @windows? ".dll" : @linux? ".a" : @macos? ".dylib" : error("platform not support")
 const folder = @windows? "bin" : @linux? "lib" : error("platform not support")
 
-inzip_location = Pkg.dir("Toxcore", "deps", "builds", folder, "libtox$ending")
+inzip_location = Pkg.dir("Toxcore", "deps", "builds", folder, "$file$ending")
 # platfrom specific extraction
 mv(inzip_location, joinpath("bin", "libtoxcore$ending"))
 
