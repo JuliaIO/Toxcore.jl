@@ -34,27 +34,17 @@ export Tox_Options
 ###################### ToxPublicKey #####################################
 
 immutable ToxPublicKey
-	ptr::Ptr{Uint8}
+	key::Vector{Uint8}
+	function ToxPublicKey(public_key::Vector{Uint8})
+		(length(public_key) != TOX_PUBLIC_KEY_SIZE) && throw(error("Tox API Invalid Public Key."))
+		new(public_key)
+	end	
 end
+ToxPublicKey() = ToxPublicKey(zeros(Uint8, TOX_PUBLIC_KEY_SIZE))
+Base.convert(::Type{ASCIIString}, public_key::ToxPublicKey) = uppercase(bytes2hex(public_key))
+Base.convert(::Type{ToxPublicKey}, key::ASCIIString) = ToxPublicKey(hex2bytes(uppercase(key)))
+Base.convert(::Type{ToxPublicKey}, ptr::Ptr{UInt8})  = ToxPublicKey(pointer_to_array(ptr, TOX_PUBLIC_KEY_SIZE))
 
-function ToxPublicKey()
-    ToxAddress(pointer(zeros(Uint8,TOX_PUBLIC_KEY_SIZE)))
-end
-
-function ToxPublicKey(public_key::ASCIIString)
-	Base.convert(ToxPublicKey, public_key)
-end
-
-function Base.convert(::Type{ASCIIString}, public_key::ToxPublicKey)
-	uppercase(bytes2hex(pointer_to_array(public_key.ptr, TOX_PUBLIC_KEY_SIZE)))
-end
-
-function Base.convert(::Type{ToxPublicKey}, string::ASCIIString)
-	public_key = hex2bytes(uppercase(string))	
-	(length(public_key) != TOX_PUBLIC_KEY_SIZE) && throw(error("Tox API Invalid Public Key."))
-
-	return ToxPublicKey(pointer(public_key))
-end
 
 ###################### ToxAddress #####################################
 
@@ -137,19 +127,23 @@ end
 #
 # tox_bootstrap
 #
+include("bootstrap.jl")
 function tox_bootstrap(tox::Ptr{Tox})
-	# this should be done better but for now it works just fine
-	const bootstrap_address = "78.225.128.39"
-	const bootstrap_port = 33445
-	const bootstrap_key = "7A2306BFBA665E5480AE59B31E116BE9C04DCEFE04D9FE25082316FA34B4DA0C"		
-
-	tox_bootstrap(tox, bootstrap_address, bootstrap_port, ToxPublicKey(bootstrap_key))
+	# taken from utox
+	i = rand(1:(length(bootstrap_nodes)-4))
+	for (url, port, key) in bootstrap_nodes[i:i+3]
+		tox_bootstrap(tox, url, port, key)
+    	tox_add_tcp_relay(tox, url, port, key)
+	end
+	true
 end
 
 function tox_bootstrap(tox::Ptr{Tox}, host::ASCIIString, port, public_key::ToxPublicKey)
-	CInterface.tox_bootstrap(tox, host, port, public_key.ptr, C_NULL)
+	CInterface.tox_bootstrap(tox, host, port, public_key.key, C_NULL)
 end
-
+function tox_add_tcp_relay(tox::Ptr{Tox}, host::ASCIIString, port, public_key::ToxPublicKey)
+	CInterface.tox_add_tcp_relay(tox, host, port, public_key.key, C_NULL)
+end
 #
 # tox_self_get_address
 #
@@ -243,7 +237,7 @@ end
 # tox_friend_add_norequest
 #
 function tox_friend_add_norequest(tox::Ptr{Tox}, public_key::ToxPublicKey)
-	CInterface.tox_friend_add_norequest(tox, public_key.ptr, C_NULL)
+	CInterface.tox_friend_add_norequest(tox, public_key.key, C_NULL)
 end
 
 #
