@@ -49,27 +49,17 @@ Base.convert(::Type{ToxPublicKey}, ptr::Ptr{UInt8})  = ToxPublicKey(pointer_to_a
 ###################### ToxAddress #####################################
 
 immutable ToxAddress
-	ptr::Ptr{Uint8}
+	address::Vector{Uint8}
+	function ToxAddress(address::Vector{Uint8})
+		if length(address) != TOX_ADDRESS_SIZE
+			throw(error("Tox API Invalid Address. Address not of correct length. Is: $(length(address)), should be: $(TOX_ADDRESS:SIZE)"))
+		end
+		new(address)
+	end
 end
-
-function ToxAddress()
-    ToxAddress(pointer(zeros(Uint8,TOX_ADDRESS_SIZE)))
-end
-
-function ToxAddress(address::ASCIIString)
-	Base.convert(ToxAddress, address)
-end
-
-function Base.convert(::Type{ASCIIString}, address::ToxAddress)
-	uppercase(bytes2hex(pointer_to_array(address.ptr, TOX_ADDRESS_SIZE)))
-end
-
-function Base.convert(::Type{ToxAddress}, string::ASCIIString)
-	address = hex2bytes(uppercase(string))	
-	(length(address) != TOX_ADDRESS_SIZE) && throw(error("Tox API Invalid Address."))
-
-	return ToxAddress(pointer(address))
-end
+ToxAddress() = ToxAddress(zeros(Uint8,TOX_ADDRESS_SIZE))
+Base.convert(::Type{ASCIIString}, address::ToxAddress) 	= uppercase(bytes2hex(address.address))
+Base.convert(::Type{ToxAddress}, string::ASCIIString) 	= ToxAddress(hex2bytes(uppercase(string)))
 
 ###################### ToxOptions #####################################
 
@@ -105,6 +95,31 @@ end
 
 function tox_new(options::Tox_Options)
 	return CInterface.tox_new(Ref(options), C_NULL)
+end
+function Tox(toxoptions=tox_options_default())
+	my_tox = tox_new(toxoptions)
+end
+function Tox(toxfile::AbstractString, default_options=tox_options_default())
+	if isfile(toxfile)
+		fs 			= open(toxfile)
+		savedata 	= readbytes(fs)
+		close(fs)
+        options = Tox_Options(default_options.ipv6_enabled,
+                            default_options.udp_enabled,
+                            default_options.proxy_type,
+                            default_options.proxy_host,
+                            default_options.proxy_port,
+                            default_options.start_port,
+                            default_options.end_port,
+                            default_options.tcp_port,
+                            TOX_SAVEDATA_TYPE_TOX_SAVE,
+                            pointer(savedata),
+                            length(savedata))
+
+        return Tox(options)
+	else
+		error("No toxcore file at $toxfile")
+	end
 end
 
 #
@@ -387,5 +402,65 @@ end
 
 
 
+immutable Message
+    from 			::ToxUser
+    text 			::UTF8String
+    timestemp 		::DateTime
+    Message(from, text) = new(from, text, now())
+end
+
+immutable ToxUser
+	tox 			::Tox
+	address 		::ToxAddress
+	name 			::UTF8String
+	statusmessage 	::UTF8String
+	status 			::TOX_USER_STATUS
+	friends 		::Vector{ToxFriend}
+
+	avatar 			::Array{RGBA, 2}
+	color 			::RGBA{Float32}
+	messages 		::Dict{ToxFriend, Vector{Message}}
+	signals 		::Dict{Symbol, Signal}
+end
 
 
+
+immutable ToxFriend
+	id 		::UInt32
+	name    ::UTF8String
+end
+
+function ToxUser(tox::Tox;
+		address 		= tox_self_get_address(tox)
+		name 			= tox_get_name(tox)
+		statusmessage 	= "I'm available",
+		status 			= CInterface.TOX_USER_STATUS_NONE,
+		friends 		= tox_self_get_friend_list(tox), 
+		avatar 			= RGBA{Float32}[rand(RGBA{Float32}) for i=1:64, j=1:64],
+		color 			= rand(RGBA{Float32}),
+		messages 		= Dict{ToxFriend, Vector{Message}}()
+	)
+	ToxUser(tox, address, name, statusmessage, status, friends, avatar, color, messages)
+end
+
+ToxUser(savefile::AbstractString) = Tox(savefile)
+ToxUser() = Tox()
+
+
+function tox_get_name(tox)
+	s = tox_self_get_name_size(tox)
+	name = zeros(Uint8, s)
+    return bytestring(tox_self_get_name(tox, s), s)
+end
+
+function tox_self_get_name(tox,name)
+    ccall((:tox_self_get_name,libtoxcore),Void,(Ptr{Tox},Ptr{Uint8}),tox,name)
+end
+
+
+
+function update(tox::ToxUser)
+	tox_self_set_name(tox, info.name)
+    tox_self_set_status_message(tox, info.statusmessage) 
+    CInterface.tox_self_set_status(tox, info.status) 
+end
