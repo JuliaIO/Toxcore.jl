@@ -289,23 +289,23 @@ end
 
 ###################### Low-Level Callback API #####################################
 
-typealias tox_file_chunk_request_cb_args 		(Ptr{Tox}, Uint32, Uint32, Uint64, Csize_t, Ptr{Void})
-typealias tox_file_recv_cb_args 				(Ptr{Tox}, Uint32, Uint32, TOX_FILE_KIND, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_file_recv_chunk_cb_args 			(Ptr{Tox}, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_file_recv_control_cb_args 		(Ptr{Tox}, Uint32, Uint32, TOX_FILE_CONTROL, Ptr{Void})
+const tox_file_chunk_request_cb_args       = (Ptr{Tox}, Uint32, Uint32, Uint64, Csize_t, Ptr{Void})
+const tox_file_recv_cb_args                = (Ptr{Tox}, Uint32, Uint32, TOX_FILE_KIND, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_file_recv_chunk_cb_args          = (Ptr{Tox}, Uint32, Uint32, Uint64, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_file_recv_control_cb_args        = (Ptr{Tox}, Uint32, Uint32, TOX_FILE_CONTROL, Ptr{Void})
 
-typealias tox_friend_connection_status_cb_args 	(Ptr{Tox}, Uint32, TOX_CONNECTION, Ptr{Void})
-typealias tox_friend_lossless_packet_cb_args 	(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_lossy_packet_cb_args		(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_message_cb_args 			(Ptr{Tox}, Uint32, TOX_MESSAGE_TYPE, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_name_cb_args 				(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_read_receipt_cb_args 		(Ptr{Tox}, Uint32, Uint32, Ptr{Void})
-typealias tox_friend_request_cb_args 			(Ptr{Tox}, Ptr{Uint8}, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_status_cb_args				(Ptr{Tox}, Uint32, TOX_USER_STATUS, Ptr{Void})
-typealias tox_friend_status_message_cb_args 	(Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
-typealias tox_friend_typing_cb_args 			(Ptr{Tox}, Uint32, Bool, Ptr{Void})
+const tox_friend_connection_status_cb_args = (Ptr{Tox}, Uint32, TOX_CONNECTION, Ptr{Void})
+const tox_friend_lossless_packet_cb_args   = (Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_lossy_packet_cb_args      = (Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_message_cb_args           = (Ptr{Tox}, Uint32, TOX_MESSAGE_TYPE, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_name_cb_args              = (Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_read_receipt_cb_args      = (Ptr{Tox}, Uint32, Uint32, Ptr{Void})
+const tox_friend_request_cb_args           = (Ptr{Tox}, Ptr{Uint8}, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_status_cb_args            = (Ptr{Tox}, Uint32, TOX_USER_STATUS, Ptr{Void})
+const tox_friend_status_message_cb_args    = (Ptr{Tox}, Uint32, Ptr{Uint8}, Csize_t, Ptr{Void})
+const tox_friend_typing_cb_args            = (Ptr{Tox}, Uint32, Bool, Ptr{Void})
 
-typealias tox_self_connection_status_cb_args 	(Ptr{Tox}, TOX_CONNECTION, Ptr{Void})
+const tox_self_connection_status_cb_args   = (Ptr{Tox}, TOX_CONNECTION, Ptr{Void})
 
 #
 # tox_callback_file_chunk_request
