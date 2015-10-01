@@ -36,7 +36,7 @@ immutable Tox_Options
 end
 ```
 ## API
-Appart from the basic wrapping the attempt is to create a Julia-style Toxcore API. This is independent from the concrete wrapping implementation used. The idea is to keep function names for a first Toxcore-close API, but to overcome any C-specific limitations. This includes altering return values and arguments.
+Apart from the basic wrapping the attempt is to create a Julia-style Toxcore API. This is independent from the concrete wrapping implementation used. The idea is to keep function names for a first Toxcore-close API, but to overcome any C-specific limitations. This includes altering return values and arguments.
 
 1. Replace (..., const uint8_t * pointer_to_some_array, size_t array_length, ...) by (..., data::Fitting_type, ...) 
 2. => Don't need to expose some functions - like tox_friend_get_name_size
